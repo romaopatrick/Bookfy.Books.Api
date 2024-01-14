@@ -1,6 +1,7 @@
 using Bookfy.Books.Api.Boundaries;
 using Bookfy.Books.Api.Domain;
 using Bookfy.Books.Api.Ports;
+using Bookfy.Books.Api.src.Boundaries;
 
 namespace Bookfy.Books.Api.Adapters;
 
@@ -17,7 +18,7 @@ public class BookService(
     {
         if (await BookConflicts(input.Title, input.Edition, input.PublisherId, input.AuthorId, ct))
             return Result.WithFailure<Book>("book_conflicts", 409);
-            
+
         var author = await _authorRepository.FirstById(input.AuthorId, ct);
         if (author is null)
             return Result.WithFailure<Book>("author_not_found", 404);
@@ -43,6 +44,21 @@ public class BookService(
         }, ct);
 
         return Result.WithSuccess(book, 201);
+    }
+
+    public async Task<Result<Paginated<Book>>> Search(SearchBooks input, CancellationToken ct)
+    {
+        var result = await _bookRepository.Get(x
+            => x.Title.Contains(input.SearchTerm ?? "", StringComparison.CurrentCultureIgnoreCase)
+            || x.Edition!.Contains(input.SearchTerm ?? "", StringComparison.CurrentCultureIgnoreCase)
+            || x.Author.FullName.Contains(input.SearchTerm ?? "", StringComparison.CurrentCultureIgnoreCase)
+            || x.Publisher.TradeName.Contains(input.SearchTerm ?? "", StringComparison.CurrentCultureIgnoreCase)
+            || x.BookEasySearch.ReferenceExpression!.Contains(input.SearchTerm ?? "", StringComparison.CurrentCultureIgnoreCase)
+            || x.BookEasySearch.SearchTerms.Any(x => x.Contains(input.SearchTerm ?? "", StringComparison.CurrentCultureIgnoreCase))
+        , input.Skip ?? 0, input.Take ?? 10, ct);
+
+
+        return Result.WithSuccess(result, 200);
     }
 
     private async Task<bool> BookConflicts(
