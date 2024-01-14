@@ -20,13 +20,12 @@ public class BookService(
             return Result.WithFailure<Book>("publisher_not_found", 404);
 
         var publisher = await _publisherRepository.FirstById(input.PublisherId, ct);
-        if(publisher is null) 
+        if(publisher is null)
             return Result.WithFailure<Book>("author_not_found", 404);
 
         var book = await _bookRepository.Create(new() {
-            AuthorId = author.Id,
+            Author = author,
             BookEasySearch = new() {
-                AuthorName = author.FullName,
                 ISBNCode = input.ISBNCode,
                 ReferenceExpression = input.ReferenceExpression,
                 SearchTerms = input.SearchTerms,
