@@ -5,5 +5,5 @@ namespace Bookfy.Books.Api.Ports;
 
 public interface IPublisherRepository
 {
-    public Task<Publisher> FirstById(Guid id, CancellationToken ct);
+    public Task<Publisher?> FirstById(Guid id, CancellationToken ct);
 }

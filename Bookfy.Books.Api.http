@@ -3,4 +3,18 @@
 GET {{Bookfy.Books.Api_HostAddress}}/weatherforecast/
 Accept: application/json
 
+
+POST {{Bookfy.Books.Api_HostAddress}}/v1/book
+{
+  "title": "string",
+  "publisherId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "publishDate": "2024-01-14T21:46:16.154Z",
+  "authorId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "searchTerms": [
+    "teste",
+    "tes"
+  ]
+}
+
+
 ###

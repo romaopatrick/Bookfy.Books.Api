@@ -10,5 +10,6 @@ public interface IBookRepository
     Task<Paginated<Book>> Get(Expression<Func<Book, bool>> filter, long skip, long take, CancellationToken ct);
     Task<Book> Create(Book book, CancellationToken ct);
     Task<Book> Update(Book book, CancellationToken ct);
+    Task<long> Count(Expression<Func<Book, bool>> filter, CancellationToken ct);
     Task Delete(Guid id, CancellationToken ct);
 }

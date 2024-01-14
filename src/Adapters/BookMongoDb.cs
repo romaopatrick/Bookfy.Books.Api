@@ -14,6 +14,9 @@ namespace Bookfy.Books.Api.Adapters
                 .GetDatabase(dbSettings.Value.Database)
                 .GetCollection<Book>(nameof(Book));
 
+        public Task<long> Count(Expression<Func<Book, bool>> filter, CancellationToken ct)
+            => _collection.CountDocumentsAsync(filter, cancellationToken: ct);
+            
         public async Task<Book> Create(Book book, CancellationToken ct)
         {
             book.Id = Guid.NewGuid();

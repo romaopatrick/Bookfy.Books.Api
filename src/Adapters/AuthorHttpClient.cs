@@ -1,29 +1,31 @@
 using System.Net;
+using Bookfy.Books.Api.Boundaries;
 using Bookfy.Books.Api.Domain;
 using Bookfy.Books.Api.Ports;
 using Flurl.Http;
 using Flurl.Http.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace Bookfy.Books.Api.Adapters;
 
 public class AuthorHttpClient(
     IFlurlClientCache clientCache,
-    AuthorHttpSettings settings): IAuthorRepository
+    IOptions<AuthorHttpSettings> settings): IAuthorRepository
 {
-    private readonly AuthorHttpSettings _settings = settings;
+    private readonly AuthorHttpSettings _settings = settings.Value;
     private readonly IFlurlClient _client = clientCache
-        .GetOrAdd(nameof(AuthorHttpClient), settings.BaseAddress)
+        .GetOrAdd(nameof(AuthorHttpClient), settings.Value.BaseAddress)
         .AllowAnyHttpStatus();
 
     public async Task<Author?> FirstById(Guid id, CancellationToken ct)
     {
         using var response = await _client
-            .HttpClient
-            .GetAsync(_settings.GetByIdPath, ct);
+            .Request(_settings.GetByIdPath, id)
+            .GetAsync(cancellationToken: ct);
 
-        return response.IsSuccessStatusCode 
-            ? await response.Content.ReadFromJsonAsync<Author>(ct) 
-            : null;
+        var result = await response.GetJsonAsync<Result<Author>>();
+
+        return result?.Data;
     }
 }
 
