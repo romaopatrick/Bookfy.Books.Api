@@ -5,7 +5,7 @@ using Flurl.Http;
 using Flurl.Http.Configuration;
 using Microsoft.Extensions.Options;
 
-namespace Bookfy.Books.Api.src.Adapters;
+namespace Bookfy.Books.Api.Adapters;
 
 public class PublisherHttpClient(
     IFlurlClientCache clientCache,

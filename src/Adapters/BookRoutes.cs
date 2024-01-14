@@ -1,10 +1,9 @@
 using System.Net;
 using Bookfy.Books.Api.Boundaries;
 using Bookfy.Books.Api.Ports;
-using Bookfy.Books.Api.src.Boundaries;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Bookfy.Books.Api.src.Adapters;
+namespace Bookfy.Books.Api.Adapters;
 
 public static class BookRoutes
 {

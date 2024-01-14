@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace Bookfy.Books.Api.src.Boundaries;
+namespace Bookfy.Books.Api.Boundaries;
 
 public class SearchBooks
 {

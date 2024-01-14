@@ -1,6 +1,5 @@
 using Bookfy.Books.Api.Adapters;
 using Bookfy.Books.Api.Ports;
-using Bookfy.Books.Api.src.Adapters;
 using Flurl.Http.Configuration;
 using MongoDB.Driver;
 
