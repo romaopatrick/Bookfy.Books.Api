@@ -3,6 +3,7 @@ namespace Bookfy.Books.Api.Boundaries;
 public class CreateBook 
 {
     public required string Title { get; set; }
+    public required int NumberOfPages { get; set; }
     public string? Edition { get; set; }
     public IDictionary<string, string> Settings { get; set; } = new Dictionary<string, string>();
     public required Guid PublisherId { get; set; }

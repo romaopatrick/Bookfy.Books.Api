@@ -31,6 +31,7 @@ public class BookService(
         {
             Author = author,
             Publisher = publisher,
+            NumberOfPages = input.NumberOfPages,
             BookEasySearch = new()
             {
                 ISBNCode = input.ISBNCode,
@@ -48,7 +49,7 @@ public class BookService(
 
     public async Task<Result> Delete(DeleteBook input, CancellationToken ct)
     {
-        if(!await BookExists(input.Id, ct))
+        if (!await BookExists(input.Id, ct))
             return Result.WithFailure<Book>("book_not_found_with_id", 404);
 
         await _bookRepository.Delete(input.Id, ct);
@@ -73,10 +74,10 @@ public class BookService(
     public async Task<Result<Book>> Update(UpdateBook input, CancellationToken ct)
     {
         var book = await _bookRepository.First(x => x.Id == input.Id, ct);
-        if(book is null)
+        if (book is null)
             return Result.WithFailure<Book>("book_not_found_with_id", 404);
 
-        if(input.AuthorId is not null && input.AuthorId != book.Author.Id)
+        if (input.AuthorId is not null && input.AuthorId != book.Author.Id)
         {
             var author = await _authorRepository.FirstById((Guid)input.AuthorId, ct);
             if (author is null)
@@ -85,7 +86,7 @@ public class BookService(
             book.Author = author;
         }
 
-        if(input.PublisherId is not null && input.PublisherId != book.Publisher.Id)
+        if (input.PublisherId is not null && input.PublisherId != book.Publisher.Id)
         {
             var publisher = await _publisherRepository.FirstById((Guid)input.PublisherId, ct);
             if (publisher is null)
@@ -94,10 +95,10 @@ public class BookService(
             book.Publisher = publisher;
         }
 
-        if(await BookConflicts(book.Id, 
-            input.Title ?? book.Title, 
-            input.Edition ?? book.Edition, 
-            input.PublisherId ?? book.Publisher.Id, 
+        if (await BookConflicts(book.Id,
+            input.Title ?? book.Title,
+            input.Edition ?? book.Edition,
+            input.PublisherId ?? book.Publisher.Id,
             input.AuthorId ?? book.Author.Id, ct))
             return Result.WithFailure<Book>("book_conflicts", 409);
 
